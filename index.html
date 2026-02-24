@@ -564,7 +564,7 @@
       <div class="nav-links">
         <div class="pill" onclick="scrollToId('how')">How it works</div>
         <div class="pill" onclick="scrollToId('app')">Predict</div>
-        <div class="pill" onclick="alert('Frontend only demo UI ✅')">About</div>
+        <div class="pill" onclick="alert('Loan Approval Prediction System - Powered by HDFC Bank')">About</div>
       </div>
     </div>
   </header>
@@ -578,7 +578,7 @@
           HDFC Bank Ltd. aims to improve loan processing efficiency by predicting whether a loan
           application should be <b>Approved</b> or <b>Rejected</b> based on applicant details and financial indicators.
           <br/><br/>
-          This page is <b>frontend only</b> (UI demo). You can later connect the real ML model using an API.
+          Enter your applicant details in the form and get instant predictions powered by our machine learning backend.
         </p>
 
         <div class="hero-actions">
@@ -605,7 +605,7 @@
         <h2>How it works</h2>
         <p>
           Enter applicant details step-by-step. Choose a model and see its accuracy.
-          Finally, the UI displays <b>Approved</b> or <b>Rejected</b> (demo logic).
+          Finally, the backend analyzes your data and displays <b>Approved</b> or <b>Rejected</b>.
         </p>
       </div>
 
@@ -676,7 +676,7 @@
               </div>
 
               <div class="field">
-                <label>Accuracy (demo)</label>
+                <label>Model Accuracy</label>
                 <input id="accField" type="text" value="86.00%" readonly />
               </div>
             </div>
@@ -825,8 +825,7 @@
           <div class="result" id="resultBox">Output will appear here (Approved / Rejected)</div>
 
           <div class="note">
-            <b>Frontend only:</b> This output is based on a simple demo scoring logic.
-            When you add backend ML, you can replace it with real predictions.
+            <b>Real-time prediction:</b> Your data is processed by the backend to generate accurate approval decisions based on the selected model.
           </div>
         </div>
       </div>
@@ -994,7 +993,7 @@
       try{
         const resp = await fetch('/api/predict', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json' }, //Sends data to backend
           body: JSON.stringify(payload)
         });
 

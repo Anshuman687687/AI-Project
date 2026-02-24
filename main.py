@@ -121,8 +121,6 @@ def predict(req: PredictRequest):
     return JSONResponse({
         "approved": bool(approved),
         "message": "Approved ✅" if approved else "Rejected ❌",
-        "score": score,
-        "threshold": threshold,
     })
 
 
