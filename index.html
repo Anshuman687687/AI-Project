@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HDFC Bank - Loan Approval Prediction (Frontend)</title>
+
+  <style>
+    :root{
+      --nav:#0b2f6b;
+      --nav2:#0a2657;
+      --accent:#1e66ff;
+      --card:#ffffff;
+      --bg:#f4f7fb;
+      --text:#0b2239;
+      --muted:#6b7c8f;
+      --border:#e6ecf3;
+      --shadow: 0 18px 50px rgba(10,38,87,0.18);
+      --radius: 18px;
+      --okBg:#d8f7d8;
+      --okTx:#0b3d0b;
+      --noBg:#ffd7d7;
+      --noTx:#6b0d0d;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ====== Top Navbar (Full width) ====== */
+    .navbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(90deg, var(--nav), var(--nav2));
+      color:#fff;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .nav-inner{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .logoBox{
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    .brandText{
+      display:flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .brandText b{
+      font-size: 14px;
+      letter-spacing: .2px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .brandText span{
+      font-size: 12px;
+      opacity: .85;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      font-size: 13px;
+      opacity: .95;
+    }
+    .pill{
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.20);
+      cursor:pointer;
+      user-select: none;
+      transition: transform .08s ease, background .15s ease;
+      white-space: nowrap;
+    }
+    .pill:hover{ background: rgba(255,255,255,0.20); }
+    .pill:active{ transform: scale(.99); }
+
+    /* ====== Hero (Full width image style) ====== */
+    .hero{
+      background:
+        linear-gradient(0deg, rgba(11,47,107,0.72), rgba(11,47,107,0.72)),
+        url("https://images.unsplash.com/photo-1559523161-0fc0d8d2f356?auto=format&fit=crop&w=2000&q=60");
+      background-size: cover;
+      background-position: center;
+      color:#fff;
+    }
+    .hero-inner{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 54px 18px 42px;
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: center;
+    }
+    @media (max-width: 980px){
+      .hero-inner{ grid-template-columns: 1fr; padding: 44px 18px 34px; }
+      .nav-links{ display:none; }
+    }
+
+    .hero h1{
+      margin:0;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: .2px;
+    }
+    .hero p{
+      margin: 12px 0 0;
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: .95;
+      max-width: 58ch;
+    }
+    .hero-actions{
+      margin-top: 16px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      font-weight: 900;
+      padding: 12px 14px;
+      border-radius: 14px;
+      transition: transform .08s ease, background .15s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .btnPrimary{
+      background: var(--accent);
+      color:#fff;
+    }
+    .btnPrimary:hover{ background:#1653d8; }
+    .btnGhost{
+      background: rgba(255,255,255,0.16);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+    .btnGhost:hover{ background: rgba(255,255,255,0.22); }
+    .btn:active{ transform: scale(.99); }
+
+    .hero-card{
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius);
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-card h3{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+    .hero-kv{
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.28);
+      opacity:.95;
+    }
+    .hero-kv:last-child{ border-bottom:none; }
+
+    /* ====== Main Layout (Constrained width) ====== */
+    .container{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    /* 3 cards like "How it works" */
+    .how{
+      display:grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 16px;
+      margin-top: -24px;
+    }
+    @media (max-width: 980px){
+      .how{ grid-template-columns: 1fr; margin-top: 0; }
+    }
+
+    .infoCard{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .infoCard h2{
+      margin:0;
+      font-size: 18px;
+      color: var(--nav);
+    }
+    .infoCard p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stepsRow{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .stepsRow{ grid-template-columns: 1fr; }
+    }
+    .stepCard{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+      overflow:hidden;
+    }
+    .stepCard:before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 20% 10%, rgba(30,102,255,0.10), transparent 45%);
+      pointer-events:none;
+    }
+    .stepNo{
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      display:grid;
+      place-items:center;
+      background: #eef5ff;
+      border: 1px solid #d9e7ff;
+      color: var(--nav);
+      font-weight: 1000;
+      margin-bottom: 10px;
+    }
+    .stepCard b{
+      display:block;
+      color: var(--nav);
+      margin-bottom: 6px;
+    }
+    .stepCard span{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* ====== App Section ====== */
+    .appGrid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .appGrid{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelHead{
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 12px;
+    }
+    .panelHead h3{
+      margin:0;
+      color: var(--nav);
+      font-size: 16px;
+    }
+    .tiny{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .badge{
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #eef5ff;
+      border: 1px solid #d9e7ff;
+      color: var(--nav);
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    /* wizard sections */
+    .panelBody{ padding: 14px 16px 16px; }
+
+    .progressWrap{
+      background: #fbfdff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .progressTop{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: #eef3fb;
+      border: 1px solid var(--border);
+      overflow:hidden;
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, #78b6ff, var(--accent));
+      border-radius: 999px;
+      transition: width 220ms ease;
+    }
+
+    .section{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: box-shadow 160ms ease, transform 160ms ease, opacity 160ms ease;
+    }
+    .section.active{
+      border-color: rgba(30,102,255,0.35);
+      box-shadow: 0 10px 26px rgba(30,102,255,0.12);
+      transform: translateY(-1px);
+    }
+    .section.locked{
+      opacity: .55;
+      pointer-events:none;
+      background:#fbfcfe;
+    }
+
+    .secHead{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .secTitle{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      min-width:0;
+    }
+    .secNum{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      background:#eef5ff;
+      border:1px solid #d9e7ff;
+      color: var(--nav);
+      font-weight: 1000;
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .secTitle b{
+      color: var(--nav);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .secTitle div{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .btnMini{
+      border:none;
+      cursor:pointer;
+      font-weight: 900;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eef5ff;
+      border:1px solid #d9e7ff;
+      color: var(--nav);
+      transition: transform .08s ease, background .15s ease;
+      white-space: nowrap;
+    }
+    .btnMini:hover{ background:#e2efff; }
+    .btnMini:active{ transform: scale(.99); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label{
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--nav);
+    }
+    input, select{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      outline:none;
+      font-size: 14px;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+      background:#fff;
+      color: var(--text);
+    }
+    input:focus, select:focus{
+      border-color: rgba(30,102,255,0.55);
+      box-shadow: 0 0 0 4px rgba(30,102,255,0.12);
+    }
+
+    .footerActions{
+      display:flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .btnWide{
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-weight: 1000;
+      cursor:pointer;
+      transition: transform .08s ease, background .15s ease;
+      font-size: 14px;
+    }
+    .btnWide.primary{
+      background: var(--accent);
+      color:#fff;
+      border-color: transparent;
+    }
+    .btnWide.primary:hover{ background:#1653d8; }
+    .btnWide.ghost{
+      background:#f2f6fd;
+      color: var(--nav);
+    }
+    .btnWide.ghost:hover{ background:#e9f1ff; }
+    .btnWide:active{ transform: scale(.99); }
+
+    /* Right summary */
+    .summary{
+      padding: 14px 16px 16px;
+    }
+    .summaryBox{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fbfdff;
+      margin-bottom: 12px;
+    }
+    .summaryBox h4{
+      margin:0 0 10px;
+      color: var(--nav);
+      font-size: 14px;
+    }
+    .kv{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .kv:last-child{ border-bottom:none; }
+
+    .result{
+      text-align:center;
+      font-weight: 1100;
+      font-size: 18px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #eef5ff;
+      color: var(--nav);
+    }
+    .result.ok{
+      background: var(--okBg);
+      color: var(--okTx);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .result.no{
+      background: var(--noBg);
+      color: var(--noTx);
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    .note{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logoBox">H</div>
+        <div class="brandText">
+          <b>HDFC Bank Ltd.</b>
+          <span>Loan Approval Prediction • Frontend</span>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <div class="pill" onclick="scrollToId('how')">How it works</div>
+        <div class="pill" onclick="scrollToId('app')">Predict</div>
+        <div class="pill" onclick="alert('Frontend only demo UI ✅')">About</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>Predict Loan Approval</h1>
+        <p>
+          HDFC Bank Ltd. aims to improve loan processing efficiency by predicting whether a loan
+          application should be <b>Approved</b> or <b>Rejected</b> based on applicant details and financial indicators.
+          <br/><br/>
+          This page is <b>frontend only</b> (UI demo). You can later connect the real ML model using an API.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btnPrimary" onclick="scrollToId('app')">Start Prediction</button>
+          <button class="btn btnGhost" onclick="scrollToId('how')">See Steps</button>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Quick Highlights</h3>
+        <div class="hero-kv"><span>Models</span><b>Logistic, LGBM, Tree, XGBoost</b></div>
+        <div class="hero-kv"><span>Inputs</span><b>Income, Loan, Credit, Assets…</b></div>
+        <div class="hero-kv"><span>Output</span><b>Approved / Rejected</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="how">
+      <div class="infoCard">
+        <h2>How it works</h2>
+        <p>
+          Enter applicant details step-by-step. Choose a model and see its accuracy.
+          Finally, the UI displays <b>Approved</b> or <b>Rejected</b> (demo logic).
+        </p>
+      </div>
+
+      <div class="stepsRow">
+        <div class="stepCard">
+          <div class="stepNo">1</div>
+          <b>Select Model</b>
+          <span>Choose Logistic / LGBM / Decision Tree / XGBoost and see accuracy.</span>
+        </div>
+        <div class="stepCard">
+          <div class="stepNo">2</div>
+          <b>Enter Details</b>
+          <span>Fill applicant & loan details in clean website-style input boxes.</span>
+        </div>
+        <div class="stepCard">
+          <div class="stepNo">3</div>
+          <b>Get Result</b>
+          <span>Output is shown clearly as Approved or Rejected.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP -->
+    <section id="app" class="appGrid">
+
+      <!-- FORM PANEL -->
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <h3>Loan Application Form</h3>
+            <div class="tiny">Complete each section to unlock the next</div>
+          </div>
+          <div class="badge" id="badgeModel">Model: Logistic</div>
+        </div>
+
+        <div class="panelBody">
+
+          <div class="progressWrap">
+            <div class="progressTop">
+              <span id="stepText">Section 1 of 4</span>
+              <span id="accText">Accuracy: 86.00%</span>
+            </div>
+            <div class="bar"><div class="fill" id="fill"></div></div>
+          </div>
+
+          <!-- SECTION 1 -->
+          <div class="section active" data-sec="0">
+            <div class="secHead">
+              <div class="secTitle">
+                <div class="secNum">1</div>
+                <div>
+                  <b>Model Selection</b>
+                  <div>Choose model and view accuracy</div>
+                </div>
+              </div>
+              <button class="btnMini" type="button" onclick="nextSection()">Continue</button>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label>Select Model</label>
+                <select id="model">
+                  <option value="logistic">Logistic Regression</option>
+                  <option value="lgbm">LightGBM (LGBM)</option>
+                  <option value="decision_tree">Decision Tree</option>
+                  <option value="xgboost">XGBoost</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Accuracy (demo)</label>
+                <input id="accField" type="text" value="86.00%" readonly />
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2 -->
+          <div class="section locked" data-sec="1">
+            <div class="secHead">
+              <div class="secTitle">
+                <div class="secNum">2</div>
+                <div>
+                  <b>Applicant Details</b>
+                  <div>Basic applicant information</div>
+                </div>
+              </div>
+              <button class="btnMini" type="button" onclick="nextSection()">Continue</button>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label>Loan ID</label>
+                <input type="number" id="loan_id" placeholder="e.g., 1"/>
+              </div>
+
+              <div class="field">
+                <label>No. of Dependents</label>
+                <input type="number" id="no_of_dependents" placeholder="e.g., 0 to 5"/>
+              </div>
+
+              <div class="field">
+                <label>Education</label>
+                <select id="education">
+                  <option value="">Select</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Not Graduate">Not Graduate</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Self Employed</label>
+                <select id="self_employed">
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3 -->
+          <div class="section locked" data-sec="2">
+            <div class="secHead">
+              <div class="secTitle">
+                <div class="secNum">3</div>
+                <div>
+                  <b>Loan & Credit</b>
+                  <div>Income, loan and credit score</div>
+                </div>
+              </div>
+              <button class="btnMini" type="button" onclick="nextSection()">Continue</button>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label>Income (Annum)</label>
+                <input type="number" id="income_annum" placeholder="e.g., 9600000"/>
+              </div>
+
+              <div class="field">
+                <label>Loan Amount</label>
+                <input type="number" id="loan_amount" placeholder="e.g., 29900000"/>
+              </div>
+
+              <div class="field">
+                <label>Loan Term (Years)</label>
+                <input type="number" id="loan_term" placeholder="e.g., 12"/>
+              </div>
+
+              <div class="field">
+                <label>CIBIL Score</label>
+                <input type="number" id="cibil_score" placeholder="e.g., 778"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4 -->
+          <div class="section locked" data-sec="3">
+            <div class="secHead">
+              <div class="secTitle">
+                <div class="secNum">4</div>
+                <div>
+                  <b>Assets</b>
+                  <div>Residential, commercial, luxury & bank assets</div>
+                </div>
+              </div>
+              <button class="btnMini" type="button" onclick="predictLoan()">Predict</button>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label>Residential Assets Value</label>
+                <input type="number" id="residential_assets_value" placeholder="e.g., 2400000"/>
+              </div>
+
+              <div class="field">
+                <label>Commercial Assets Value</label>
+                <input type="number" id="commercial_assets_value" placeholder="e.g., 17600000"/>
+              </div>
+
+              <div class="field">
+                <label>Luxury Assets Value</label>
+                <input type="number" id="luxury_assets_value" placeholder="e.g., 22700000"/>
+              </div>
+
+              <div class="field">
+                <label>Bank Asset Value</label>
+                <input type="number" id="bank_asset_value" placeholder="e.g., 0 or 1000000"/>
+              </div>
+            </div>
+
+            <div class="footerActions">
+              <button class="btnWide ghost" type="button" onclick="prevSection()">Back</button>
+              <button class="btnWide primary" type="button" onclick="predictLoan()">Show Approved/Rejected</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SUMMARY PANEL -->
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <h3>Result & Summary</h3>
+            <div class="tiny">Model, accuracy and prediction</div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="summaryBox">
+            <h4>Selected Model</h4>
+            <div class="kv"><span>Model</span><b id="sideModel">Logistic Regression</b></div>
+            <div class="kv"><span>Accuracy</span><b id="sideAcc">86.00%</b></div>
+          </div>
+
+          <div class="result" id="resultBox">Output will appear here (Approved / Rejected)</div>
+
+          <div class="note">
+            <b>Frontend only:</b> This output is based on a simple demo scoring logic.
+            When you add backend ML, you can replace it with real predictions.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Scroll helper
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    // Manual demo accuracies
+    const modelAccuracy = {
+      logistic: 0.86,
+      lgbm: 0.91,
+      decision_tree: 0.84,
+      xgboost: 0.93
+    };
+
+    const modelNames = {
+      logistic: "Logistic Regression",
+      lgbm: "LightGBM (LGBM)",
+      decision_tree: "Decision Tree",
+      xgboost: "XGBoost"
+    };
+
+    const totalSections = 4;
+    let currentSec = 0;
+
+    const $ = (id) => document.getElementById(id);
+
+    function updateModelUI(){
+      const m = $("model").value;
+      const acc = modelAccuracy[m];
+      const accText = (acc * 100).toFixed(2) + "%";
+
+      $("accText").textContent = "Accuracy: " + accText;
+      $("accField").value = accText;
+
+      $("badgeModel").textContent = "Model: " + (m === "decision_tree" ? "Decision Tree" : m.toUpperCase());
+      $("chipModel").textContent  = "Model: " + (m === "decision_tree" ? "Decision Tree" : m.toUpperCase());
+
+      $("sideModel").textContent = modelNames[m];
+      $("sideAcc").textContent   = accText;
+    }
+
+    function updateProgress(){
+      $("stepText").textContent = `Section ${currentSec + 1} of ${totalSections}`;
+      const pct = (currentSec / (totalSections - 1)) * 100;
+      $("fill").style.width = pct.toFixed(0) + "%";
+    }
+
+    function setActive(sec){
+      currentSec = Math.max(0, Math.min(sec, totalSections - 1));
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+
+      const active = document.querySelector(`.section[data-sec="${currentSec}"]`);
+      if(active){
+        active.classList.add("active");
+        active.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+      updateProgress();
+    }
+
+    function unlock(sec){
+      const box = document.querySelector(`.section[data-sec="${sec}"]`);
+      if(box) box.classList.remove("locked");
+    }
+
+    function shakeActive(){
+      const active = document.querySelector(`.section[data-sec="${currentSec}"]`);
+      if(!active) return;
+      active.animate(
+        [{transform:"translateX(0)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],
+        {duration: 220, iterations: 1}
+      );
+    }
+
+    function filledSection(sec){
+      if(sec === 0) return true;
+
+      if(sec === 1){
+        return $("loan_id").value.trim() !== "" &&
+               $("no_of_dependents").value.trim() !== "" &&
+               $("education").value.trim() !== "" &&
+               $("self_employed").value.trim() !== "";
+      }
+
+      if(sec === 2){
+        return $("income_annum").value.trim() !== "" &&
+               $("loan_amount").value.trim() !== "" &&
+               $("loan_term").value.trim() !== "" &&
+               $("cibil_score").value.trim() !== "";
+      }
+
+      if(sec === 3){
+        return $("residential_assets_value").value.trim() !== "" &&
+               $("commercial_assets_value").value.trim() !== "" &&
+               $("luxury_assets_value").value.trim() !== "" &&
+               $("bank_asset_value").value.trim() !== "";
+      }
+      return false;
+    }
+
+    function nextSection(){
+      if(!filledSection(currentSec)){
+        shakeActive();
+        return;
+      }
+      const next = currentSec + 1;
+      if(next < totalSections){
+        unlock(next);
+        setActive(next);
+      }
+    }
+
+    function prevSection(){
+      setActive(currentSec - 1);
+    }
+
+    // Prediction: call backend API, fallback to local scoring if API unavailable
+    async function predictLoan(){
+      for(let s=0; s<totalSections; s++){
+        if(!filledSection(s)){
+          for(let i=0; i<=s; i++) unlock(i);
+          setActive(s);
+          shakeActive();
+          return;
+        }
+      }
+
+      const model = $("model").value;
+
+      const income = Number($("income_annum").value || 0);
+      const loan   = Number($("loan_amount").value || 0);
+      const cibil  = Number($("cibil_score").value || 0);
+
+      const res = Number($("residential_assets_value").value || 0);
+      const com = Number($("commercial_assets_value").value || 0);
+      const lux = Number($("luxury_assets_value").value || 0);
+      const bank= Number($("bank_asset_value").value || 0);
+
+      const selfEmp = $("self_employed").value;
+
+      const payload = {
+        model,
+        income_annum: income,
+        loan_amount: loan,
+        loan_term: Number($("loan_term").value || 0),
+        cibil_score: cibil,
+        residential_assets_value: res,
+        commercial_assets_value: com,
+        luxury_assets_value: lux,
+        bank_asset_value: bank,
+        self_employed: selfEmp
+      };
+
+      const box = $("resultBox");
+      box.classList.remove("ok","no");
+
+      try{
+        const resp = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if(!resp.ok) throw new Error('Network response not ok');
+        const data = await resp.json();
+        box.textContent = data.message || (data.approved ? 'Approved ✅' : 'Rejected ❌');
+        box.classList.add(data.approved ? 'ok' : 'no');
+      }catch(err){
+        console.warn('API call failed, using local fallback scoring', err);
+
+        // Local fallback scoring (same logic as backend)
+        let score = 0;
+        if(cibil >= 750) score += 3;
+        else if(cibil >= 650) score += 2;
+        else if(cibil >= 550) score += 1;
+
+        if(loan > 0){
+          const r = income / loan;
+          if(r >= 0.6) score += 3;
+          else if(r >= 0.4) score += 2;
+          else if(r >= 0.25) score += 1;
+        }
+
+        const assets = res + com + lux + bank;
+        if(assets >= loan) score += 2;
+        else if(assets >= loan * 0.5) score += 1;
+
+        if(selfEmp === "Yes") score -= 0.5;
+
+        let threshold = 5;
+        if(model === "decision_tree") threshold = 5.5;
+        if(model === "lgbm") threshold = 4.8;
+        if(model === "xgboost") threshold = 4.6;
+
+        const approved = score >= threshold;
+        box.textContent = approved ? 'Approved ✅' : 'Rejected ❌';
+        box.classList.add(approved ? 'ok' : 'no');
+      }
+    }
+
+    // init: lock sections 2-4
+    document.querySelector(`.section[data-sec="1"]`).classList.add("locked");
+    document.querySelector(`.section[data-sec="2"]`).classList.add("locked");
+    document.querySelector(`.section[data-sec="3"]`).classList.add("locked");
+
+    setActive(0);
+    updateProgress();
+    updateModelUI();
+    $("model").addEventListener("change", updateModelUI);
+
+    // Enter key = Continue / Predict
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        if(currentSec < totalSections - 1) nextSection();
+        else predictLoan();
+      }
+    });
+  </script>
+
+</body>
+</html>
